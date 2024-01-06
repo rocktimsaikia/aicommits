@@ -1,1 +1,1 @@
-`aicommits` with some personal opinionated default settings
+`aicommits` with some personalized default settings.
