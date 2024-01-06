@@ -1,11 +1,6 @@
 import path from 'path';
 import { testSuite, expect } from 'manten';
-import {
-	assertOpenAiToken,
-	createFixture,
-	createGit,
-	files,
-} from '../utils.js';
+import { assertOpenAiToken, createFixture, createGit, files } from '../utils.js';
 
 export default testSuite(({ describe }) => {
 	describe('Git hook', ({ test }) => {

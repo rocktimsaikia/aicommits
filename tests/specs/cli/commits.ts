@@ -1,10 +1,5 @@
 import { testSuite, expect } from 'manten';
-import {
-	assertOpenAiToken,
-	createFixture,
-	createGit,
-	files,
-} from '../../utils.js';
+import { assertOpenAiToken, createFixture, createGit, files } from '../../utils.js';
 
 export default testSuite(({ describe }) => {
 	if (process.platform === 'win32') {
@@ -24,7 +19,9 @@ export default testSuite(({ describe }) => {
 			const statusBefore = await git('status', ['--porcelain', '--untracked-files=no']);
 			expect(statusBefore.stdout).toBe('A  data.json');
 
-			const { stdout, exitCode } = await aicommits(['--exclude', 'data.json'], { reject: false });
+			const { stdout, exitCode } = await aicommits(['--exclude', 'data.json'], {
+				reject: false,
+			});
 			expect(exitCode).toBe(1);
 			expect(stdout).toMatch('No staged changes found.');
 			await fixture.rm();
@@ -138,9 +135,7 @@ export default testSuite(({ describe }) => {
 			await git('add', ['data.json']);
 
 			// Generate flag should override generate config
-			const committing = aicommits([
-				'--generate', '2',
-			]);
+			const committing = aicommits(['--generate', '2']);
 
 			// Hit enter to accept the commit message
 			committing.stdout!.on('data', function onPrompt(buffer: Buffer) {
@@ -173,7 +168,8 @@ export default testSuite(({ describe }) => {
 
 		test('Generates Japanese commit message via locale config', async () => {
 			// https://stackoverflow.com/a/15034560/911407
-			const japanesePattern = /[\u3000-\u303F\u3040-\u309F\u30A0-\u30FF\uFF00-\uFF9F\u4E00-\u9FAF\u3400-\u4DBF]/;
+			const japanesePattern =
+				/[\u3000-\u303F\u3040-\u309F\u30A0-\u30FF\uFF00-\uFF9F\u4E00-\u9FAF\u3400-\u4DBF]/;
 
 			const { fixture, aicommits } = await createFixture({
 				...files,
@@ -211,7 +207,8 @@ export default testSuite(({ describe }) => {
 
 		describe('commit types', ({ test }) => {
 			test('Should not use conventional commits by default', async () => {
-				const conventionalCommitPattern = /(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test):\s/;
+				const conventionalCommitPattern =
+					/(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test):\s/;
 				const { fixture, aicommits } = await createFixture({
 					...files,
 				});
@@ -242,7 +239,8 @@ export default testSuite(({ describe }) => {
 			});
 
 			test('Conventional commits', async () => {
-				const conventionalCommitPattern = /(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test):\s/;
+				const conventionalCommitPattern =
+					/(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test):\s/;
 				const { fixture, aicommits } = await createFixture({
 					...files,
 					'.aicommits': `${files['.aicommits']}\ntype=conventional`,
@@ -274,7 +272,8 @@ export default testSuite(({ describe }) => {
 			});
 
 			test('Accepts --type flag, overriding config', async () => {
-				const conventionalCommitPattern = /(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test):\s/;
+				const conventionalCommitPattern =
+					/(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test):\s/;
 				const { fixture, aicommits } = await createFixture({
 					...files,
 					'.aicommits': `${files['.aicommits']}\ntype=other`,
@@ -284,9 +283,7 @@ export default testSuite(({ describe }) => {
 				await git('add', ['data.json']);
 
 				// Generate flag should override generate config
-				const committing = aicommits([
-					'--type', 'conventional',
-				]);
+				const committing = aicommits(['--type', 'conventional']);
 
 				committing.stdout!.on('data', (buffer: Buffer) => {
 					const stdout = buffer.toString();
@@ -309,7 +306,8 @@ export default testSuite(({ describe }) => {
 			});
 
 			test('Accepts empty --type flag', async () => {
-				const conventionalCommitPattern = /(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test):\s/;
+				const conventionalCommitPattern =
+					/(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test):\s/;
 				const { fixture, aicommits } = await createFixture({
 					...files,
 					'.aicommits': `${files['.aicommits']}\ntype=conventional`,
@@ -318,9 +316,7 @@ export default testSuite(({ describe }) => {
 
 				await git('add', ['data.json']);
 
-				const committing = aicommits([
-					'--type', '',
-				]);
+				const committing = aicommits(['--type', '']);
 
 				committing.stdout!.on('data', (buffer: Buffer) => {
 					const stdout = buffer.toString();
